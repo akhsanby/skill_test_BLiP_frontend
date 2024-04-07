@@ -27,12 +27,14 @@ type OrderStoreType = {
   typeFood: TypeFoodType[];
   foodList: FoodListType[];
   carts: CartType[];
-  subTotal: number;
+  isPayment: boolean;
   changeTypeFood: (type: TypeFoodType) => void;
   addToCart: (food: FoodListType) => void;
+  removeFromCart: (food: FoodListType) => void;
   increaseQty: (item: CartType) => void;
   decreaseQty: (item: CartType) => void;
   setNote: (item: CartType) => void;
+  setIsPayment: (bool: boolean) => void;
 };
 
 export const useOrderStore = create<OrderStoreType>((set) => ({
@@ -179,7 +181,7 @@ export const useOrderStore = create<OrderStoreType>((set) => ({
     },
   ],
   carts: [],
-  subTotal: 0,
+  isPayment: false,
   changeTypeFood: (type: TypeFoodType) =>
     set((state: any) => ({
       ...state,
@@ -219,6 +221,11 @@ export const useOrderStore = create<OrderStoreType>((set) => ({
         };
       }
     }),
+  removeFromCart: (food: FoodListType) =>
+    set((state: any) => {
+      const newCarts = state.carts.filter((cart: CartType) => cart.name !== food.name);
+      return { ...state, carts: newCarts };
+    }),
   increaseQty: (item: CartType) =>
     set((state: any) => {
       return {
@@ -257,4 +264,5 @@ export const useOrderStore = create<OrderStoreType>((set) => ({
         }),
       };
     }),
+  setIsPayment: (bool: boolean) => set(() => ({ isPayment: bool })),
 }));
