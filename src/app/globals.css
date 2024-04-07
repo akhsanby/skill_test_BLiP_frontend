@@ -10,6 +10,10 @@ body {
   overflow: hidden;
 }
 
+.Toastify__toast {
+  border-radius: 16px !important;
+}
+
 .type-food-border {
   position: relative;
 }
@@ -21,6 +25,10 @@ body {
   position: absolute;
   bottom: -12px;
   left: 0;
+}
+
+::-webkit-calendar-picker-indicator {
+  filter: invert(1);
 }
 
 .barlow-thin {
