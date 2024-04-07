@@ -2,6 +2,7 @@ import { Icon } from "@iconify/react";
 import React, { Fragment } from "react";
 import Image from "next/image";
 import { useOrderStore } from "@/store/order";
+import type { CartType } from "@/store/order";
 
 type OrderProps = {
   className: string;
@@ -10,7 +11,7 @@ type OrderProps = {
 export default function Order({ className }: OrderProps) {
   const { carts, isPayment, increaseQty, decreaseQty, setNote, setIsPayment, removeFromCart } = useOrderStore((state) => state);
 
-  const subtotal = carts.reduce((total, cart) => {
+  const subtotal = carts.reduce((total, cart: CartType) => {
     return (total += cart.total);
   }, 0);
 
@@ -47,7 +48,7 @@ export default function Order({ className }: OrderProps) {
           </thead>
           <tbody>
             {carts.length > 0 ? (
-              carts.map((cart, i) => (
+              carts.map((cart: CartType, i) => (
                 <Fragment key={i}>
                   <tr>
                     <td className="px-6 pt-4 pb-2 barlow-medium text-white ">
@@ -70,7 +71,7 @@ export default function Order({ className }: OrderProps) {
                   </tr>
                   <tr>
                     <td className="ps-6 pb-2" colSpan={2}>
-                      <input type="text" onChange={() => setNote(cart)} value={cart.note} className="w-full bg-[#2D303E] border border-[#393C49] text-white text-sm rounded-lg block p-2.5" placeholder="Please, just a little bit spicy only." />
+                      <input type="text" onChange={(e: any) => setNote(cart, e.target.value)} value={cart.note} className="w-full bg-[#2D303E] border border-[#393C49] text-white text-sm rounded-lg block p-2.5" placeholder="Please, just a little bit spicy only." />
                     </td>
                     <td className="pb-2 ps-4" colSpan={1}>
                       <button type="button" onClick={() => removeFromCart(cart)} className="border-2 border-[#FFCA40] hover:bg-[#ffc940]/50 font-medium rounded-lg text-sm p-3 text-center inline-flex items-center me-2">

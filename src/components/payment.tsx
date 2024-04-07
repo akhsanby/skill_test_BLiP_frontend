@@ -1,4 +1,5 @@
 import { useOrderStore } from "@/store/order";
+import type { CartType } from "@/store/order";
 import { Icon } from "@iconify/react";
 import { Fragment } from "react";
 import Image from "next/image";
@@ -9,9 +10,9 @@ type PaymentProps = {
 };
 
 export default function Payment({ className }: PaymentProps) {
-  const { carts, setIsPayment, setNote } = useOrderStore((state) => state);
+  const { carts, setIsPayment, setNote, syncStock } = useOrderStore((state) => state);
 
-  const subtotal = carts.reduce((total, cart) => {
+  const subtotal = carts.reduce((total, cart: CartType) => {
     return (total += cart.total);
   }, 0);
 
@@ -25,6 +26,7 @@ export default function Payment({ className }: PaymentProps) {
       autoClose: 500,
       onClose: () => {
         setIsPayment(false);
+        syncStock();
       },
     });
   }
@@ -33,7 +35,7 @@ export default function Payment({ className }: PaymentProps) {
     <div className={`${className} flex bg-[#000000]/70`}>
       <div className="w-[30%] h-full"></div>
       <div className="bg-[#1F1D2B] w-[35%] h-full rounded-l-2xl p-6 relative">
-        <Icon icon="ep:back" width={24} height={24} className="text-white mb-4" onClick={() => setIsPayment(false)} />
+        <Icon icon="ep:back" width={24} height={24} className="text-white mb-4 rounded-full object-cover" onClick={() => setIsPayment(false)} />
         <div className="flex items-center justify-between">
           <p className="flex flex-col">
             <span className="text-white barlow-semibold text-[28px]">Confirmation</span>
@@ -47,7 +49,7 @@ export default function Payment({ className }: PaymentProps) {
         <div className="p-0 max-h-[415px] overflow-y-auto">
           <table className="w-full text-sm text-left text-white">
             <tbody>
-              {carts.map((cart, i) => (
+              {carts.map((cart: CartType, i) => (
                 <Fragment key={i}>
                   <tr>
                     <td className="pt-4 pb-2 barlow-medium text-white ">
@@ -66,7 +68,7 @@ export default function Payment({ className }: PaymentProps) {
                   </tr>
                   <tr>
                     <td className="pb-2" colSpan={2}>
-                      <input type="text" onChange={() => setNote(cart)} value={cart.note} className="w-full bg-[#2D303E] border border-[#393C49] text-white text-sm rounded-lg block p-2.5" placeholder="Please, just a little bit spicy only." />
+                      <input type="text" onChange={(e) => setNote(cart, e.target.value)} value={cart.note} className="w-full bg-[#2D303E] border border-[#393C49] text-white text-sm rounded-lg block p-2.5" placeholder="Please, just a little bit spicy only." />
                     </td>
                     <td className="pb-2 ps-4" colSpan={1}>
                       <button type="button" className="border-2 border-[#FFCA40] hover:bg-[#ffc940]/50 font-medium rounded-lg text-sm p-3 text-center inline-flex items-center me-2">
@@ -159,10 +161,10 @@ export default function Payment({ className }: PaymentProps) {
                   <svg className="w-2.5 h-2.5 text-white absolute left-3 top-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
                     <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m1 1 4 4 4-4" />
                   </svg>
-                  <select id="countries" className="bg-[#1f1d2b] text-white border-2 border-[#393C49] text-sm rounded-lg block w-full p-2.5 ps-7 appearance-none">
-                    <option selected>Dine In</option>
-                    <option>Take It</option>
-                    <option>Delivery</option>
+                  <select defaultValue="dine_in" id="countries" className="bg-[#1f1d2b] text-white border-2 border-[#393C49] text-sm rounded-lg block w-full p-2.5 ps-7 appearance-none">
+                    <option value="dine_in">Dine In</option>
+                    <option value="take_it">Take It</option>
+                    <option value="delivery">Delivery</option>
                   </select>
                 </div>
               </div>
