@@ -8,7 +8,7 @@ type OrderProps = {
 };
 
 export default function Order({ className }: OrderProps) {
-  const { carts, increaseQty, decreaseQty, setNote } = useOrderStore((state) => state);
+  const { carts, isPayment, increaseQty, decreaseQty, setNote, setIsPayment, removeFromCart } = useOrderStore((state) => state);
 
   const subtotal = carts.reduce((total, cart) => {
     return (total += cart.total);
@@ -73,7 +73,7 @@ export default function Order({ className }: OrderProps) {
                       <input type="text" onChange={() => setNote(cart)} value={cart.note} className="w-full bg-[#2D303E] border border-[#393C49] text-white text-sm rounded-lg block p-2.5" placeholder="Please, just a little bit spicy only." />
                     </td>
                     <td className="pb-2 ps-4" colSpan={1}>
-                      <button type="button" className="border-2 border-[#FFCA40] hover:bg-[#ffc940]/50 font-medium rounded-lg text-sm p-3 text-center inline-flex items-center me-2">
+                      <button type="button" onClick={() => removeFromCart(cart)} className="border-2 border-[#FFCA40] hover:bg-[#ffc940]/50 font-medium rounded-lg text-sm p-3 text-center inline-flex items-center me-2">
                         <Icon icon="iconoir:trash" className="text-[#EA7C69]" width={15} height={15} />
                       </button>
                     </td>
@@ -101,7 +101,7 @@ export default function Order({ className }: OrderProps) {
             <span className="text-white">Rp {subtotal || 0}</span>
           </li>
         </ul>
-        <button type="button" className={`${carts.length > 0 ? "" : "hidden"} text-white bg-[#FFCA40] hover:bg-[#ffc940]/50 border-2 border-[#393C49] poppins-bold rounded-lg text-[14px] px-5 py-2.5 mt-9 w-full`}>
+        <button type="button" onClick={() => setIsPayment(true)} className={`${carts.length > 0 ? "" : "hidden"} text-white bg-[#FFCA40] hover:bg-[#ffc940]/50 border-2 border-[#393C49] poppins-bold rounded-lg text-[14px] px-5 py-2.5 mt-9 w-full`}>
           Continue to Payment
         </button>
       </div>

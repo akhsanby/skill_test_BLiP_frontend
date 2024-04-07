@@ -6,9 +6,10 @@ import type { TypeFoodType, FoodListType } from "@/store/order";
 import SidebarComponent from "@/components/sidebar";
 import ContentComponent from "@/components/content";
 import OrderComponent from "@/components/order";
+import PaymentComponent from "@/components/payment";
 
 export default function Home() {
-  const { typeFood, foodList, changeTypeFood, addToCart } = useOrderStore((state) => state);
+  const { typeFood, foodList, isPayment, changeTypeFood, addToCart } = useOrderStore((state) => state);
 
   function filteredFoodList() {
     const activeType = typeFood.filter((type: TypeFoodType) => type.active === true);
@@ -29,12 +30,16 @@ export default function Home() {
         </ul>
         <div className="text-white barlow-semibold text-[20px] flex items-center justify-between mb-[24px]">
           <p>Choose Dishes</p>
-          <button id="dropdownDefaultButton" data-dropdown-toggle="dropdown" className="text-white bg-[#1f1d2b] focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center" type="button">
-            <svg className="w-2.5 h-2.5 me-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+          <div className="relative">
+            <svg className="w-2.5 h-2.5 text-white absolute left-3 top-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
               <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m1 1 4 4 4-4" />
             </svg>
-            Dine In{" "}
-          </button>
+            <select id="countries" className="bg-[#1f1d2b] text-white border-2 border-[#393C49] text-sm rounded-lg block w-full p-2.5 ps-7 appearance-none">
+              <option selected>Dine In</option>
+              <option>Take It</option>
+              <option>Delivery</option>
+            </select>
+          </div>
         </div>
         <div className="grid grid-cols-2 lg:grid-cols-3 gap-x-7 gap-y-[calc(28px+35px)] pt-[35px] pb-[20px] h-[calc(100vh-300px)] sm:h-[calc(100vh-280px)] md:h-[calc(100vh-260px)] lg:h-[calc(100vh-240px)] overflow-y-scroll">
           {filteredFoodList().map((food, i) => (
@@ -50,6 +55,7 @@ export default function Home() {
         </div>
       </ContentComponent>
       <OrderComponent className="absolute left-[calc(60%+100px)] h-screen" />
+      {isPayment && <PaymentComponent className="absolute z-20 right-0 h-screen w-screen" />}
     </main>
   );
 }
